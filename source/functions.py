@@ -124,7 +124,7 @@ def df_pca(names,data,elem_list, liminf, limsup):
     
     names: lista con nombres de los archivos con los espectros
     data: contenido de los espectros; DataFrame con data['name'] = {'Energy': energy, 'Intensity': intensity}
-    elem_list: los elementos a seleccionar
+    elem_list: los elementos a seleccionar (strings de símbolos)
     liminf, limsup: límites inferior y superior de la intensidad de la linea 
     
     """
