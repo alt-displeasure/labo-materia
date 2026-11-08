@@ -1,0 +1,1 @@
+Los archivos df_pca_1st_sel.csv y df_pca_2nd_sel.csv son la primera selección (antes de hablar con Euge) y la segunda (después de hablar con Euge) de todos los elementos que pudimos identificar en la totalidad de espectros (i.e. en las muestras 1 a 12).
