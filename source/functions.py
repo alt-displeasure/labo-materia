@@ -103,14 +103,7 @@ def select_element(peaks, energies, element ,tol):
 
 def abundant_line(ref_df, element, liminf, limsup):
     
-    """
-    ACÁ NO DEBERÍA ACOTAR LA ENERGÍA EN VEZ DE LA INTENSIDAD?? CHEQUEAR
-    """
-    
-    j=0
-    while liminf<=ref_df[element]['Intensity'][j]<=limsup: 
-        j=j+1
-    el = ref_df[element]['Lines'][j]
+
     return el
 
 
