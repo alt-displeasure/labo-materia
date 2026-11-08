@@ -79,7 +79,7 @@ K = 3.314
     
 # Todos los elementos encontrados 
 elem = [Fe, Ca, Ti, Cu, Zn, Sr, Mn, Zr, Rb, K]
-elem_name = ['Fe', 'Ca', 'Ti', 'Cu', 'Zn', 'Sr', 'Mn', 'Zr', 'Rb', 'K']
+elem_name_sin3 = ['Fe', 'Ca', 'Ti', 'Cu', 'Zn', 'Sr', 'Mn', 'Zr', 'Rb', 'K']
 
 # Seleccionamos las lineas
 I_elem = {}
@@ -98,6 +98,68 @@ for i in range(len(elem)):
     I.append(Y/Y_Rh)
 
   # Añado las intensidades al diccionario, con clave símbolo del elemento
-  I_elem[elem_name[i]] = I
+  I_elem[elem_name_sin3[i]] = I
 
-df_pca = pd.DataFrame(I_elem, index=names[8:])
+df_pca_sin3 = pd.DataFrame(I_elem, index=names[8:])
+
+#%%
+
+# =============================================================================
+#       ARMADO DATAFRAME PARA PCA - menos elementos
+# =============================================================================
+    
+# Todos los elementos encontrados 
+elem = [Fe, Ca, Ti, Cu, Zn, Sr, Mn, K]
+elem_name_sin3_v2 = ['Fe', 'Ca', 'Ti', 'Cu', 'Zn', 'Sr', 'Mn', 'K']
+
+# Seleccionamos las lineas
+I_elem = {}
+
+for i in range(len(elem)):
+  I = []
+
+  for j in names[8:]:
+
+    # Busco el rodio para normalizar
+    X_Rh, Y_Rh = select_element2(data[j], Rh)
+
+    # Selecciono las coordenadas del pico del elemento buscado
+    X, Y = select_element2(data[j], elem[i])
+    # Guardo la inensidad normalizada
+    I.append(Y/Y_Rh)
+
+  # Añado las intensidades al diccionario, con clave símbolo del elemento
+  I_elem[elem_name_sin3_v2[i]] = I
+
+df_pca_sin3_v2 = pd.DataFrame(I_elem, index=names[8:])
+
+#%%
+
+# =============================================================================
+#       ARMADO DATAFRAME PARA PCA - tercera selección de elementos
+# =============================================================================
+    
+# Todos los elementos encontrados 
+elem = [Fe, Ca, Ti, Cu, Zn, Sr, Mn, K, As]
+elem_name_sin3_v3 = ['Fe', 'Ca', 'Ti', 'Cu', 'Zn', 'Sr', 'Mn', 'K', 'As']
+
+# Seleccionamos las lineas
+I_elem = {}
+
+for i in range(len(elem)):
+  I = []
+
+  for j in names[8:]:
+
+    # Busco el rodio para normalizar
+    X_Rh, Y_Rh = select_element2(data[j], Rh)
+
+    # Selecciono las coordenadas del pico del elemento buscado
+    X, Y = select_element2(data[j], elem[i])
+    # Guardo la inensidad normalizada
+    I.append(Y/Y_Rh)
+
+  # Añado las intensidades al diccionario, con clave símbolo del elemento
+  I_elem[elem_name_sin3_v3[i]] = I
+
+df_pca_sin3_v3 = pd.DataFrame(I_elem, index=names[8:])
