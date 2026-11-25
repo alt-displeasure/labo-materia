@@ -98,47 +98,7 @@ def select_element(peaks, energies, element ,tol):
   return E_elem, I_elem, ind_elem
 
 
-# ---------------------------------------
-# Hallar la linea principal de un elemento
 
-def abundant_line(ref_df, element, liminf, limsup):
-    
-
-    return el
-
-
-# ---------------------------------------
-# Armado del DataFrame para hacer PCA
-
-
-def df_pca(names,data,elem_list, liminf, limsup):
-    
-    """
-    
-    names: lista con nombres de los archivos con los espectros
-    data: contenido de los espectros; DataFrame con data['name'] = {'Energy': energy, 'Intensity': intensity}
-    elem_list: los elementos a seleccionar (strings de símbolos)
-    liminf, limsup: límites inferior y superior de la intensidad de la linea 
-    
-    """
-    
-    I_elem = {}
-    for i in range(len(elem_list)):
-        I = []
-        for j in names:
-
-            # Busco el rodio para normalizar
-            X_Rh, Y_Rh = select_element2(data[j], abundant_line('Rh', liminf, limsup))
-
-            # Selecciono las coordenadas del pico del elemento buscado
-            X, Y = select_element2(data[j], abundant_line(elem_list[i], liminf, limsup))
-            # Guardo la inensidad normalizada
-            I.append(Y/Y_Rh)
-
-        # Añado las intensidades al diccionario, con clave símbolo del elemento
-        I_elem[elem_list[i]] = I
-
-    return pd.DataFrame(I_elem, index=names)
 
 # ---------------------------------------
 # Hacer PCA

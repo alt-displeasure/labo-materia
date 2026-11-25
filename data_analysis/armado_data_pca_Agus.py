@@ -37,7 +37,7 @@ for file in glob.glob("../data_analysis/ocres/*.*"):
     df = pd.read_csv(file, skiprows=20)
 
     #Calibrar y pasar a keV
-    e = calib(df['Channel#'])/1000
+    e = func.calib(df['Channel#'])/1000
 
     I = df['Intensity']
 
@@ -96,10 +96,10 @@ for i in range(len(elem)):
   for j in names[8:]:
 
     # Busco el rodio para normalizar
-    X_Rh, Y_Rh = select_element2(data[j], Rh)
+    X_Rh, Y_Rh = func.select_element2(data[j], Rh)
 
     # Selecciono las coordenadas del pico del elemento buscado
-    X, Y = select_element2(data[j], elem[i])
+    X, Y = func.select_element2(data[j], elem[i])
     # Guardo la inensidad normalizada
     I.append(Y/Y_Rh)
 
@@ -127,10 +127,10 @@ for i in range(len(elem)):
   for j in names[8:]:
 
     # Busco el rodio para normalizar
-    X_Rh, Y_Rh = select_element2(data[j], Rh)
+    X_Rh, Y_Rh = func.select_element2(data[j], Rh)
 
     # Selecciono las coordenadas del pico del elemento buscado
-    X, Y = select_element2(data[j], elem[i])
+    X, Y = func.select_element2(data[j], elem[i])
     # Guardo la inensidad normalizada
     I.append(Y/Y_Rh)
 
@@ -158,10 +158,10 @@ for i in range(len(elem)):
   for j in names[8:]:
 
     # Busco el rodio para normalizar
-    X_Rh, Y_Rh = select_element2(data[j], Rh)
+    X_Rh, Y_Rh = func.select_element2(data[j], Rh)
 
     # Selecciono las coordenadas del pico del elemento buscado
-    X, Y = select_element2(data[j], elem[i])
+    X, Y = func.select_element2(data[j], elem[i])
     # Guardo la inensidad normalizada
     I.append(Y/Y_Rh)
 

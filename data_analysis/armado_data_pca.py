@@ -1,3 +1,4 @@
+#%%
 # =============================================================================
 #       PREÁMBULO
 # =============================================================================
@@ -7,9 +8,14 @@ import numpy as np
 import pandas as pd
 import glob
 import os
+import sys
 
+ROOT = os.path.abspath("..")
 
-from source.functions import *
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
+import source.functions as func
 
 #%%
 
@@ -19,7 +25,7 @@ from source.functions import *
 
 data = {}
 names=[]
-for file in glob.glob("data_analysis/ocres/*.*"):
+for file in glob.glob("../data_analysis/ocres/*.*"):
 
   #Tomamos solo los csv
   if os.path.basename(file)[-1]=='v':

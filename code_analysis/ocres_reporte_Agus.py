@@ -12,7 +12,7 @@ import pandas as pd
 # from sklearn.preprocessing import StandardScaler
 import sys
 import os
-from sklearn.cluster import kmeans_plusplus
+from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
 
 ROOT = os.path.abspath("..")
@@ -21,14 +21,13 @@ if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 import source.functions as func
-import data_analysis.armado_data_pca as reducido
+import data_analysis.armado_data_pca_Agus as reducido
 #%%
 
 # =============================================================================
 #   ANÁLISIS PCA - todos los objetos
 # =============================================================================
-
-# Todos los elementos que aparecen en todas las muestras
+# Todos los elementos que aparece]n en todas las muestras
 elem_name = ['Fe', 'Ca', 'Ti', 'Cu', 'Zn', 'Sr', 'Mn', 'Zr', 'Rb', 'K']
 
 df_pca_ocres = pd.read_csv('../data_analysis/data_PCA/df_pca_2nd_sel.csv', index_col=0)
@@ -83,7 +82,7 @@ plt.title('Todos los objetos - todos los elementos')
 #       ANÁLISIS PCA - Sin los objetos con soporte
 # =============================================================================
 
-eigval, eigvec, pc_scores, cumulative_exp_var = PCA(reducido.df_pca_sin3, reducido.elem_name_sin3)
+eigval, eigvec, pc_scores, cumulative_exp_var = func.PCA(reducido.df_pca_sin3, reducido.elem_name_sin3)
 
 #%%
 ### ------------ Veamos la varianza acumulada
@@ -97,8 +96,8 @@ plt.show()
 #%%
 
 # Componentes principales a comparar:
-n = 3
-m = 4
+n = 1
+m = 2
 
 plt.figure(figsize=(7,5.5))
 
@@ -123,6 +122,50 @@ plt.grid()
 plt.legend(bbox_to_anchor=(1, 0.5), loc='center left')
 plt.tight_layout()
 plt.title('Objetos sin soporte - todos los elementos')
+#%%
+# =============================================================================
+#       ANÁLISIS PCA - Sin los objetos con soporte - Clusters
+# =============================================================================
+#Armamos la lista de datos
+Y=[[0,1],[1,4],[4,5],[5,7],[7,10],[10,11],[11,13],[13,14],[14,16]]
+x=[]
+y=[]
+for i in range(9):
+  for j in range(Y[i][0],Y[i][1]):
+    x.append(pc_scores.iloc[j][n-1])
+    y.append(pc_scores.iloc[j][m-1])
+X=np.array([x,y]).T
+
+# Ajustamos KMeans
+kmeans = KMeans(n_clusters=6, random_state=0)
+kmeans.fit(X)
+
+# Obtenemos los labels de los clusters
+labels = kmeans.labels_
+
+# Obtenemos los centroides de los clusters
+centroids = kmeans.cluster_centers_
+
+# Ploteamos clusters
+plt.figure(figsize=(10, 10))
+
+plt.scatter(
+    X[:, 0],
+    X[:, 1],
+    c=labels,
+    cmap='rainbow',
+    s=100,
+    alpha=.5
+)
+for i in range(9):
+   for j in range(Y[i][0],Y[i][1]):
+    plt.text(pc_scores.iloc[j][n-1], pc_scores.iloc[j][m-1], str(i+4), color='black',ha='center',   va='center')
+plt.xlabel('PC '+str(n))
+plt.ylabel('PC '+str(m))
+plt.grid()
+plt.title('Análisis de Clusters para mediciones sin soporte')
+plt.savefig("clusters 1 vs 2.pdf", format="pdf", bbox_inches="tight")
+
 
 #%%
 
@@ -130,7 +173,7 @@ plt.title('Objetos sin soporte - todos los elementos')
 #       ANÁLISIS PCA - Sin los objetos con soporte, sin Rb y Zr
 # =============================================================================
 
-eigval, eigvec, pc_scores, cumulative_exp_var = PCA(reducido.df_pca_sin3_v2, reducido.elem_name_sin3_v2)
+eigval, eigvec, pc_scores, cumulative_exp_var = func.PCA(reducido.df_pca_sin3_v2, reducido.elem_name_sin3_v2)
 
 #%%
 ### ------------ Veamos la varianza acumulada

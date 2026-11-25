@@ -1,3 +1,4 @@
+#%%
 # =============================================================================
 #       PREÁMBULO
 # =============================================================================
@@ -9,12 +10,18 @@ import pandas as pd
 # import matplotlib.image as mpimg
 # from sklearn.decomposition import PCA
 # from sklearn.preprocessing import StandardScaler
+import sys
+import os
+from sklearn.cluster import kmeans_plusplus
+from sklearn.datasets import make_blobs
 
-# import os
+ROOT = os.path.abspath("..")
 
-from source.functions import *
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
+import source.functions as func
 import data_analysis.armado_data_pca as reducido
-
 #%%
 
 # =============================================================================
@@ -24,9 +31,9 @@ import data_analysis.armado_data_pca as reducido
 # Todos los elementos que aparecen en todas las muestras
 elem_name = ['Fe', 'Ca', 'Ti', 'Cu', 'Zn', 'Sr', 'Mn', 'Zr', 'Rb', 'K']
 
-df_pca_ocres = pd.read_csv('data_analysis/data_PCA/df_pca_2nd_sel.csv', index_col=0)
+df_pca_ocres = pd.read_csv('../data_analysis/data_PCA/df_pca_2nd_sel.csv', index_col=0)
 
-eigval, eigvec, pc_scores, cumulative_exp_var = PCA(df_pca_ocres, elem_name)
+eigval, eigvec, pc_scores, cumulative_exp_var = func.PCA(df_pca_ocres, elem_name)
 
 #%%
 ### ------------ Veamos la varianza acumulada
@@ -206,3 +213,9 @@ plt.grid()
 plt.legend(bbox_to_anchor=(1.05, 0.5), loc='center left')
 plt.tight_layout()
 plt.title('Objetos sin soporte - 3ra selección de elementos')
+
+#%%
+x=[]
+for i in range(len(24)):
+  
+centers_init, indices = kmeans_plusplus(X, n_clusters=6, random_state=0)
