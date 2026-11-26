@@ -28,7 +28,7 @@ import data_analysis.armado_data_pca_Agus as reducido
 # =============================================================================
 #   ANÁLISIS PCA - todos los objetos
 # =============================================================================
-# Todos los elementos que aparece]n en todas las muestras
+# Todos los elementos que aparecen en todas las muestras
 elem_name = ['Fe', 'Ca', 'Ti', 'Cu', 'Zn', 'Sr', 'Mn', 'Zr', 'Rb', 'K']
 
 df_pca_ocres = pd.read_csv('../data_analysis/data_PCA/df_pca_2nd_sel.csv', index_col=0)
@@ -90,9 +90,9 @@ for i in range(12):
     x.append(pc_scores.iloc[j][n-1])
     y.append(pc_scores.iloc[j][m-1])
 X=np.array([x,y]).T
-
+#%%
 # Ajustamos KMeans
-kmeans = KMeans(n_clusters=8, random_state=0, init='k-means++', )
+kmeans = KMeans(n_clusters=7, random_state=0, init='k-means++', )
 kmeans.fit(X)
 
 # Obtenemos los labels de los clusters
@@ -119,11 +119,10 @@ plt.xlabel('PC '+str(n))
 plt.ylabel('PC '+str(m))
 plt.grid()
 plt.title('Análisis de Clusters para todos los objetos')
-plt.savefig("clusters 1 vs 2 todos.pdf", format="pdf", bbox_inches="tight")
 #%%
 
 # Ahora usamos spectral clustering
-spectral = SpectralClustering(n_clusters=6, random_state=0)
+spectral = SpectralClustering(n_clusters=6, random_state=0, gamma=0.1)
 
 labels = spectral.fit_predict(X)
 
@@ -134,15 +133,22 @@ plt.scatter(
     X[:, 0],
     X[:, 1],
     c=labels,
-    cmap='Accent',
+    cmap='gist_rainbow',
     s=100,
-    alpha=1
+    alpha=.5
 )
-
+for i in range(len(elem_name)):
+  plt.scatter(eigvec[i][n-1], eigvec[i][m-1], color='black')
+  plt.text(eigvec[i][n-1]-0.3, eigvec[i][m-1]+0.1, elem_name[i], color='black')
+for i in range(12):
+   for j in range(Y[i][0],Y[i][1]):
+    plt.text(pc_scores.iloc[j][n-1], pc_scores.iloc[j][m-1], str(i+1), color='black',ha='center',   va='center')
+plt.xlabel('PC '+str(n))
 plt.xlabel('PC 1')
 plt.ylabel('PC 2')
 plt.grid()
 plt.title('Análisis de Clusters para todos los objetos')
+plt.savefig("clusters 1 vs 2 todos.pdf", format="pdf", bbox_inches="tight")
 plt.show()
 
 #%%
@@ -150,9 +156,9 @@ plt.show()
 # =============================================================================
 #       ANÁLISIS PCA - Sin los objetos con soporte
 # =============================================================================
-
-eigval, eigvec, pc_scores, cumulative_exp_var = func.PCA(reducido.df_pca_sin3, reducido.elem_name_sin3)
-
+df_pca_sin3=pd.read_csv('../code_analysis/df_pca_sin3.csv', index_col=0)
+eigval, eigvec, pc_scores, cumulative_exp_var = func.PCA(df_pca_sin3, reducido.elem_name_sin3)
+df_pca_sin3
 #%%
 ### ------------ Veamos la varianza acumulada
 
@@ -233,11 +239,10 @@ plt.xlabel('PC '+str(n))
 plt.ylabel('PC '+str(m))
 plt.grid()
 plt.title('Análisis de Clusters para mediciones sin soporte')
-plt.savefig("clusters 1 vs 2 sin soporte.pdf", format="pdf", bbox_inches="tight")
 #%%
 
 # Ahora usamos spectral clustering
-spectral = SpectralClustering(n_clusters=5,affinity='rbf', gamma=0.05, random_state=0)
+spectral = SpectralClustering(n_clusters=5, gamma=0.05, random_state=0)
 
 labels = spectral.fit_predict(X)
 
@@ -248,16 +253,22 @@ plt.scatter(
     X[:, 0],
     X[:, 1],
     c=labels,
-    cmap='rainbow',
+    cmap='gist_rainbow',
     s=100,
-    alpha=1
+    alpha=0.5
 )
-
-plt.xlabel('PC 1')
-plt.ylabel('PC 2')
+for i in range(9):
+   for j in range(Y[i][0],Y[i][1]):
+    plt.text(pc_scores.iloc[j][n-1], pc_scores.iloc[j][m-1], str(i+4), color='black',ha='center',   va='center')
+for i in range(len(reducido.elem_name_sin3)):
+  plt.scatter(eigvec[i][n-1], eigvec[i][m-1], color='black')
+  plt.text(eigvec[i][n-1]-0.4, eigvec[i][m-1], reducido.elem_name_sin3[i], color='black')
+plt.xlabel('PC '+str(n))
+plt.ylabel('PC '+str(m))
 plt.grid()
-plt.title('Análisis de Clusters para todos los objetos')
+plt.title('Análisis de Clusters para objetos sin soporte')
 plt.show()
+plt.savefig("clusters" +str(n)+ " vs "+str(m)+" sin soporte.pdf", format="pdf", bbox_inches="tight")
 
 #%%
 
@@ -303,7 +314,44 @@ plt.grid()
 plt.legend(bbox_to_anchor=(1.05, 0.5), loc='center left')
 plt.tight_layout()
 plt.title('Objetos sin soporte - sin Rb y Zr')
+#%%
+#Armar tira de datos
+x=[]
+y=[]
+for i in range(9):
+  for j in range(Y[i][0],Y[i][1]):
+    x.append(pc_scores.iloc[j][n-1])
+    y.append(pc_scores.iloc[j][m-1])
+X=np.array([x,y]).T
 
+# Ahora usamos spectral clustering
+spectral = SpectralClustering(n_clusters=6, gamma=0.5, random_state=0)
+
+labels = spectral.fit_predict(X)
+
+# Ploteamos los clusters
+plt.figure(figsize=(10, 10))
+
+plt.scatter(
+    X[:, 0],
+    X[:, 1],
+    c=labels,
+    cmap='gist_rainbow',
+    s=100,
+    alpha=0.5
+)
+for i in range(9):
+   for j in range(Y[i][0],Y[i][1]):
+    plt.text(pc_scores.iloc[j][n-1], pc_scores.iloc[j][m-1], str(i+4), color='black',ha='center',   va='center')
+for i in range(len( reducido.elem_name_sin3_v2)):
+  plt.scatter(eigvec[i][n-1], eigvec[i][m-1], color='black')
+  plt.text(eigvec[i][n-1]-0.4, eigvec[i][m-1], reducido.elem_name_sin3[i], color='black')
+plt.xlabel('PC '+str(n))
+plt.ylabel('PC '+str(m))
+plt.grid()
+plt.title('Análisis de Clusters para objetos sin soporte')
+plt.show()
+plt.savefig("clusters" +str(n)+ " vs "+str(m)+" sin soporte.pdf", format="pdf", bbox_inches="tight")
 #%%
 
 # =============================================================================

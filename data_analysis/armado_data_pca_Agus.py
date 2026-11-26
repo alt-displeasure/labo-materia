@@ -93,7 +93,7 @@ I_elem = {}
 for i in range(len(elem)):
   I = []
 
-  for j in names:
+  for j in names[8:]:
 
     # Busco el rodio para normalizar
     X_Rh, Y_Rh = func.select_element2(data[j], Rh)
@@ -106,9 +106,9 @@ for i in range(len(elem)):
   # Añado las intensidades al diccionario, con clave símbolo del elemento
   I_elem[elem_name_sin3[i]] = I
 
-df_pca_sin3 = pd.DataFrame(I_elem, index=names)
-df_pca_sin3.to_csv("df_pca_2nd_sel.csv", index=names)
-
+df_pca_sin3 = pd.DataFrame(I_elem, index=names[8:])
+df_pca_sin3.to_csv("df_pca_sin3.csv", index=names[8:])
+df_pca_sin3
 #%%
 
 # =============================================================================
@@ -170,3 +170,4 @@ for i in range(len(elem)):
   I_elem[elem_name_sin3_v3[i]] = I
 
 df_pca_sin3_v3 = pd.DataFrame(I_elem, index=names[8:])
+# %%
