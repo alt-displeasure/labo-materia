@@ -14,6 +14,7 @@ import sys
 import os
 from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
+from sklearn.cluster import SpectralClustering
 
 ROOT = os.path.abspath("..")
 
@@ -61,8 +62,8 @@ plt.scatter(pc_scores.iloc[13:15][n-1], pc_scores.iloc[13:15][m-1], label='OLP7'
 plt.scatter(pc_scores.iloc[15:18][n-1], pc_scores.iloc[15:18][m-1], label='OLP8', c='gray')
 plt.scatter(pc_scores.iloc[18:19][n-1], pc_scores.iloc[18:19][m-1], label='OLP9', c='purple')
 plt.scatter(pc_scores.iloc[19:21][n-1], pc_scores.iloc[19:21][m-1], label='OLP10', c='orange')
-plt.scatter(pc_scores.iloc[23:24][n-1], pc_scores.iloc[23:24][m-1], label='OLP11', c='brown')
-plt.scatter(pc_scores.iloc[21:23][n-1], pc_scores.iloc[21:23][m-1], label='OLP12', c='pink')
+plt.scatter(pc_scores.iloc[21:22][n-1], pc_scores.iloc[21:22][m-1], label='OLP11', c='brown')
+plt.scatter(pc_scores.iloc[22:24][n-1], pc_scores.iloc[22:24][m-1], label='OLP12', c='pink')
 
 
 for i in range(len(elem_name)):
@@ -75,6 +76,74 @@ plt.grid()
 plt.legend(bbox_to_anchor=(1, 0.5), loc='center left')
 plt.tight_layout()
 plt.title('Todos los objetos - todos los elementos')
+
+#%%
+# =============================================================================
+#       ANÁLISIS PCA - Todos los objetos - Clusters
+# =============================================================================
+#Armamos la lista de datos
+Y=[[0,2],[2,6],[6,8],[8,9],[9,12],[12,13],[13,15],[15,18],[18,19],[19,21],[21,22],[22,24]]
+x=[]
+y=[]
+for i in range(12):
+  for j in range(Y[i][0],Y[i][1]):
+    x.append(pc_scores.iloc[j][n-1])
+    y.append(pc_scores.iloc[j][m-1])
+X=np.array([x,y]).T
+
+# Ajustamos KMeans
+kmeans = KMeans(n_clusters=8, random_state=0, init='k-means++', )
+kmeans.fit(X)
+
+# Obtenemos los labels de los clusters
+labels = kmeans.labels_
+
+# Obtenemos los centroides de los clusters
+centroids = kmeans.cluster_centers_
+
+# Ploteamos clusters
+plt.figure(figsize=(10, 10))
+
+plt.scatter(
+    X[:, 0],
+    X[:, 1],
+    c=labels,
+    cmap='Set1',
+    s=100,
+    alpha=.5
+)
+for i in range(12):
+   for j in range(Y[i][0],Y[i][1]):
+    plt.text(pc_scores.iloc[j][n-1], pc_scores.iloc[j][m-1], str(i+1), color='black',ha='center',   va='center')
+plt.xlabel('PC '+str(n))
+plt.ylabel('PC '+str(m))
+plt.grid()
+plt.title('Análisis de Clusters para todos los objetos')
+plt.savefig("clusters 1 vs 2 todos.pdf", format="pdf", bbox_inches="tight")
+#%%
+
+# Ahora usamos spectral clustering
+spectral = SpectralClustering(n_clusters=6, random_state=0)
+
+labels = spectral.fit_predict(X)
+
+# Ploteamos los clusters
+plt.figure(figsize=(10, 10))
+
+plt.scatter(
+    X[:, 0],
+    X[:, 1],
+    c=labels,
+    cmap='Accent',
+    s=100,
+    alpha=1
+)
+
+plt.xlabel('PC 1')
+plt.ylabel('PC 2')
+plt.grid()
+plt.title('Análisis de Clusters para todos los objetos')
+plt.show()
 
 #%%
 
@@ -164,8 +233,31 @@ plt.xlabel('PC '+str(n))
 plt.ylabel('PC '+str(m))
 plt.grid()
 plt.title('Análisis de Clusters para mediciones sin soporte')
-plt.savefig("clusters 1 vs 2.pdf", format="pdf", bbox_inches="tight")
+plt.savefig("clusters 1 vs 2 sin soporte.pdf", format="pdf", bbox_inches="tight")
+#%%
 
+# Ahora usamos spectral clustering
+spectral = SpectralClustering(n_clusters=5,affinity='rbf', gamma=0.05, random_state=0)
+
+labels = spectral.fit_predict(X)
+
+# Ploteamos los clusters
+plt.figure(figsize=(10, 10))
+
+plt.scatter(
+    X[:, 0],
+    X[:, 1],
+    c=labels,
+    cmap='rainbow',
+    s=100,
+    alpha=1
+)
+
+plt.xlabel('PC 1')
+plt.ylabel('PC 2')
+plt.grid()
+plt.title('Análisis de Clusters para todos los objetos')
+plt.show()
 
 #%%
 
