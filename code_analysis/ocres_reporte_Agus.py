@@ -32,7 +32,7 @@ import data_analysis.armado_data_pca_Agus as reducido
 elem_name = ['Fe', 'Ca', 'Ti', 'Cu', 'Zn', 'Sr', 'Mn', 'Zr', 'Rb', 'K']
 
 df_pca_ocres = pd.read_csv('../data_analysis/data_PCA/df_pca_2nd_sel.csv', index_col=0)
-
+df_pca_ocres 
 eigval, eigvec, pc_scores, cumulative_exp_var = func.PCA(df_pca_ocres, elem_name)
 
 #%%
@@ -242,7 +242,7 @@ plt.title('Análisis de Clusters para mediciones sin soporte')
 #%%
 
 # Ahora usamos spectral clustering
-spectral = SpectralClustering(n_clusters=5, gamma=0.05, random_state=0)
+spectral = SpectralClustering(n_clusters=5, gamma=0.5, random_state=0)
 
 labels = spectral.fit_predict(X)
 
